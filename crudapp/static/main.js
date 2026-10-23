@@ -59,6 +59,9 @@ function main() {
 		}
 		const resp = await sendMessage(message)
 		console.log(resp)
+
+		alert("Sent successfully")
+		messageField.value = ""
 	})
 }
 document.addEventListener('DOMContentLoaded', main)

@@ -1,6 +1,29 @@
 <?php
 $baseURL = 'http://localhost:7000';
 
+function isServerRunning($url) {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_NOBODY, true); // HEAD request, don't fetch body
+    curl_setopt($ch, CURLOPT_TIMEOUT, 2);   // don't hang forever
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+    curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_errno($ch);
+    curl_close($ch);
+
+    // If curl succeeded and we got some HTTP status back, server is up
+    return $error === 0 && $httpCode > 0;
+}
+
+if (!isServerRunning($baseURL)) {
+	include "../../env.php";
+	global $crudRestartCmd;
+
+	echo shell_exec('cd ../../ && ' . $crudRestartCmd);
+	sleep(1);
+}
+
 // 1. Extract target path, defaulting to empty or root
 $targetPath = $_GET['__target_path'] ?? '';
 if ($targetPath === '') {

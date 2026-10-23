@@ -15,8 +15,13 @@ type DatabaseConfig struct {
 	Name     string `yaml:"name"`
 }
 
+type JWTConfig struct {
+	Secret string `yaml:"secret"`
+}
+
 type Config struct {
 	Database *DatabaseConfig `yaml:"database"`
+	JWT      *JWTConfig      `yaml:"jwt"`
 
 	Host string `yaml:"host"`
 	Port int    `yaml:"port"`

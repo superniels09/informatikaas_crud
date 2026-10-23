@@ -40,20 +40,22 @@ func main() {
 
 	cfg, err := config.Load(*configPathFlag)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to load configuration: %v", err)
 	}
+
 	schema, err := schemaSQLFS.ReadFile("schema.sql")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to read schema file: %v", err)
 	}
+
 	db, err := database.New(cfg, schema)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to initialize database: %v", err)
 	}
 
 	if *sqlReplFlag {
 		if err := db.StartREPL(); err != nil {
-			log.Fatal(err)
+			log.Fatalf("Failed to start SQL REPL: %v", err)
 		}
 	} else {
 		startServer(cfg, db)
